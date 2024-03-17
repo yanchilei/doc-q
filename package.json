@@ -1,0 +1,27 @@
+{
+  "name": "doc-q",
+  "version": "1.0.0",
+  "description": "A simple web doc sdk",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "serve": "webpack serve"
+  },
+  "author": "Will Yan",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.10.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.2",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^5.0.3"
+  }
+}
