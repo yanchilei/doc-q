@@ -12,7 +12,11 @@ export enum EventName {
 
 }
 
-class EventEmitter {
+export class EventEmitter {
+  constructor() {
+    
+  }
+
   private listeners: Map<string, ((data: any) => void)[]> = new Map();
 
   public on(type: string, listener: (data: any) => void) {
@@ -41,5 +45,3 @@ class EventEmitter {
     });
   }
 }
-
-export const eventEmitter = new EventEmitter();

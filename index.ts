@@ -1,7 +1,20 @@
 import { DocQ } from "./module/doc";
-import { Segment, SegmentType } from "./type/segment";
 import './global.css';
 
-const model: { title: string; content: Segment[] } = { title: 'This is a title', content: [{ type: SegmentType.Text, text: 'This is a content' }] };
-const docQ = new DocQ({ el: document.getElementById('root') });
-docQ.init(model, document.getElementById('root'));
+const htmlStr = `<span style='color: blue'>This is a span element.</span>`;
+const docQ = new DocQ({
+  title: 'This is the title!',
+  titleDefaultStyle: {
+    background: 'rgba(0, 0, 0, 0.2)',
+    padding: '16px',
+    fontWeight: '700',
+    fontSize: '24px',
+    borderRadius: '16px',
+  },
+  htmlStrOrDescriptorList: [htmlStr, htmlStr],
+});
+docQ.mountTo(document.getElementById('root'));
+
+setTimeout(() => {
+  docQ.setEditable(true);
+}, 3000);
