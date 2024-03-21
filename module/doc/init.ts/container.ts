@@ -1,9 +1,11 @@
 import { DocQ } from "..";
 
-export function initContainer(docQ: DocQ, {containerDefaultStyle}: {containerDefaultStyle?: Partial<CSSStyleDeclaration>}) {
+export function initContainer(docQ: DocQ, {containerDefaultStyle, editable}: {containerDefaultStyle?: Partial<CSSStyleDeclaration>; editable?: boolean}) {
   docQ.container = document.createElement('div');
   docQ.container.style.position = 'relative';
-  docQ.container.style.padding = '16px';
+  docQ.container.style.padding = '64px';
+  docQ.container.style.outline = 'none';
+  docQ.container.setAttribute('contenteditable', editable ? 'true' : 'false');
   if (containerDefaultStyle) {
     Object.keys(containerDefaultStyle).forEach(name => {
       docQ.container.style[name] = containerDefaultStyle[name];

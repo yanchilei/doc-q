@@ -1,11 +1,12 @@
-import { Block, Descriptor } from "../block";
-import { EventName, EventEmitter } from "../event-emitter";
+import { Block } from "../block";
+import { EventName, EventEmitter, EventTypeMap } from "../event-emitter";
+import { TextSegment } from "../text-segment";
 import { init } from "./init.ts";
 
 export interface DocQParams { 
   title: string,
   editable?: boolean,
-  htmlStrOrDescriptorList: (string | Descriptor)[],
+  data: TextSegment[][],
   containerDefaultStyle?: Partial<CSSStyleDeclaration>,
   titleDefaultStyle?: Partial<CSSStyleDeclaration>,
   blockContainerDefaultStyle?: Partial<CSSStyleDeclaration>,
@@ -17,11 +18,11 @@ export class DocQ {
   public editable = false;
   public title: Block;
   public model: Block[];
-  public currentElement: HTMLElement;
   public root: HTMLElement;
   public container: HTMLDivElement;
   public blockContainer: HTMLDivElement;
   public eventEmitter: EventEmitter;
+  public selection: Selection;
   constructor(params: DocQParams) {
     init(this, params);
   }
@@ -30,18 +31,16 @@ export class DocQ {
       return;
     }
     this.editable = editable;
-    this.title.setEditable(editable);
-    this.model.forEach(block => block.setEditable(editable));
-    this.eventEmitter.emit(EventName.DocEditableChange, editable);
-  }
-
-  public setModelByIndex(index: number, block: Block) {
-    this.model[index] = block;
-    this.eventEmitter.emit(EventName.DocModelChange, { index, block });
+    this.container.contentEditable = editable.toString();
+    this.eventEmitter.emit('editablechange', this, editable);
   }
 
   public mountTo(root: HTMLElement) {
     this.root = root;
     root.appendChild(this.container);
+  }
+
+  public on<T extends EventName>(eventName: T, callback: (doc: DocQ, e: EventTypeMap[T]) => void) {
+    this.eventEmitter.on(eventName, callback);
   }
 }

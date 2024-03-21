@@ -1,20 +1,21 @@
 import { DocQ } from "./module/doc";
+import { TextSegment } from "./module/text-segment";
+
 import './global.css';
 
-const htmlStr = `<span style='color: blue'>This is a span element.</span>`;
+const originalData: TextSegment[][] = [
+  [{ text: 'This is span 01.', style: { color: 'red' } }],
+  [{ text: 'This is span 02.', style: { color: 'green' } }],
+  [{ text: 'This is span 03.', style: { color: 'blue' } }],
+];
 const docQ = new DocQ({
   title: 'This is the title!',
-  titleDefaultStyle: {
-    background: 'rgba(0, 0, 0, 0.2)',
-    padding: '16px',
-    fontWeight: '700',
-    fontSize: '24px',
-    borderRadius: '16px',
-  },
-  htmlStrOrDescriptorList: [htmlStr, htmlStr],
+  editable: true,
+  data: originalData,
 });
-docQ.mountTo(document.getElementById('root'));
 
-setTimeout(() => {
-  docQ.setEditable(true);
-}, 3000);
+docQ.mountTo(document.getElementById('root'));
+(window as any).docQ = docQ;
+docQ.on('keydown', (doc, e) => {
+  console.log(doc, e);
+})

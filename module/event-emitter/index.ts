@@ -1,32 +1,27 @@
-export enum EventName {
-  CursorPositionChange = 'cursorPositionChange',
-  CursorShowChange = 'cursorShowChange',
+import { DocQ } from "../doc";
 
-  DocModelChange = 'docModelChange',
-  DocEditableChange = 'docEditableChange',
-  DocClick = 'docClick',
-  DocKeyDown = 'docKeyDown',
-  DocKeyPress = 'docKeyPress',
-  DocKeyUp = 'docKeyUp',
-  DocCurrentChange = 'docCurrentChange',
+export type EventName = keyof EventTypeMap;
 
+export interface EventTypeMap {
+  'click': MouseEvent,
+  'keydown': KeyboardEvent,
+  'keyup': KeyboardEvent,
+  'editablechange': boolean,
+  'selectionchange': Selection
 }
 
 export class EventEmitter {
-  constructor() {
-    
-  }
 
-  private listeners: Map<string, ((data: any) => void)[]> = new Map();
+  private listeners: Map<EventName, ((doc: DocQ, e: EventTypeMap[EventName]) => void)[]> = new Map();
 
-  public on(type: string, listener: (data: any) => void) {
+  public on<T extends EventName>(type: T, listener: (doc: DocQ, e: EventTypeMap[T]) => void) {
     if (!this.listeners.has(type)) {
       this.listeners.set(type, []);
     }
     this.listeners.get(type).push(listener);
   }
 
-  public off(type: string, listener: (data: any) => void) {
+  public off<T extends EventName>(type: T, listener: (doc: DocQ, e: EventTypeMap[T]) => void) {
     if (!this.listeners.has(type)) {
       return;
     }
@@ -36,12 +31,12 @@ export class EventEmitter {
     }
   }
 
-  public emit(type: string, data?: any) {
+  public emit<T extends EventName>(type: T, doc: DocQ, e?: EventTypeMap[T]) {
     if (!this.listeners.has(type)) {
       return;
     }
     this.listeners.get(type).forEach((listener) => {
-      listener(data);
+      listener(doc, e);
     });
   }
 }

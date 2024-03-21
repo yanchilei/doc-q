@@ -2,7 +2,7 @@ import { DocQ, DocQParams } from "..";
 import { EventEmitter } from "../../event-emitter";
 import { initBlockContainer } from "./block-container";
 import { initContainer } from "./container";
-import { initEvent } from "./event";
+import { initEvent } from "../event";
 import { initModel } from "./model";
 import { initTitle } from "./title";
 

@@ -1,11 +1,18 @@
 import { DocQ, DocQParams } from "..";
 import { Block } from "../../block";
+import { Paragraph } from "../../text-segment";
 
-export function initTitle(docQ: DocQ, { title, editable, titleDefaultStyle }: DocQParams) {
+export function initTitle(docQ: DocQ, { title, titleDefaultStyle }: DocQParams) {
+  const paragraph = new Paragraph([{ text: title }]);
   docQ.title = new Block({
-    htmlStrOrDescriptor: title,
-    editable: !!editable,
-    defaultStyle: titleDefaultStyle,
+    paragraph,
+    defaultStyle: {
+      padding: '16px 0',
+      fontSize: '48px',
+      fontWeight: '700',
+      borderBottom: 'solid 1px #e4e4e4',
+      ...titleDefaultStyle,
+    },
   });
   docQ.title.mountTo(docQ.container);
   return docQ;
