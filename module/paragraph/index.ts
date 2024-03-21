@@ -27,11 +27,12 @@ export class Paragraph {
     for (let i = 0; i < this.list.length; i++) {
       const span = this.list[i];
       h += '<span';
+
       if (span.style) {
-        const keys = Object.keys(span.style);
+        const keys = Object.keys(span.style || {});
         if (keys.length > 0) {
           h += ` style="`;
-          Object.keys(span.style).forEach(name => {
+          keys.forEach(name => {
             const kebabName = camelCaseToKebabCase(name);
             h += `${kebabName}: ${span.style[name]};`;
           });
@@ -39,7 +40,9 @@ export class Paragraph {
         }
       }
       h += '>';
+
       h += span.text;
+
       h += '</span>';
     }
     return h;

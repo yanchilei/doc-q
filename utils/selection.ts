@@ -1,24 +1,41 @@
-// 获取选定的HTML元素
-export function getSelectedElements() {
-  var selectedElements = [];
-  
-  // 获取Selection对象
-  var selection = window.getSelection();
-  
-  // 遍历Selection中的所有Range对象
-  for (var i = 0; i < selection.rangeCount; i++) {
-    var range = selection.getRangeAt(i);
-    
-    // 创建一个临时的div元素，将选定的内容插入其中
-    var tempDiv = document.createElement('div');
-    tempDiv.appendChild(range.cloneContents());
-    
-    // 遍历临时div中的所有子元素，将其添加到选定的元素数组中
-    var childNodes = tempDiv.childNodes;
-    for (var j = 0; j < childNodes.length; j++) {
-      selectedElements.push(childNodes[j]);
+import { Block } from "../module/block";
+import { DocQ } from "../module/doc";
+
+export function getSelectedBlocks(doc: DocQ, selection: Selection) {
+  const blocks: Block[] = [doc.title, ...doc.model];
+  const selects: { blocks: Block[], start: number, end: number }[] = [];
+  for (let i = 0; i < selection.rangeCount; i++) {
+    let startBlock: Block = null;
+    let endBlock: Block = null;
+    const singleSelectedBlocks: Block[] = []
+    const range = selection.getRangeAt(i);
+    const { startContainer, startOffset, endContainer, endOffset } = range;
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      if (block.el.contains(startContainer)) {
+        startBlock = block;
+      }
+      if (block.el.contains(endContainer)) {
+        endBlock = block;
+      }
+      if (startBlock && endBlock) {
+        break;
+      }
     }
+    if (startBlock === endBlock) {
+      singleSelectedBlocks.push(startBlock);
+    } else {
+      const startIndex = blocks.indexOf(startBlock);
+      const endIndex = blocks.indexOf(endBlock);
+      for (let i = startIndex; i <= endIndex; i++) {
+        !blocks[i].disabled && singleSelectedBlocks.push(blocks[i]);
+      }
+    }
+    selects.push({
+      blocks: singleSelectedBlocks,
+      start: startOffset,
+      end: endOffset,
+    });
   }
-  
-  return selectedElements;
+  return selects;
 }

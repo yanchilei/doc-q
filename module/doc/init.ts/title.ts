@@ -1,6 +1,6 @@
 import { DocQ, DocQParams } from "..";
 import { Block } from "../../block";
-import { Paragraph } from "../../text-segment";
+import { Paragraph } from "../../paragraph";
 
 export function initTitle(docQ: DocQ, { title, titleDefaultStyle }: DocQParams) {
   const paragraph = new Paragraph([{ text: title }]);

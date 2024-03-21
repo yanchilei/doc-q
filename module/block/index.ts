@@ -1,22 +1,32 @@
-import { Paragraph } from "../text-segment";
-import { BlockEventName, eventWrapper } from "./event/wrapper";
+import { Paragraph } from "../paragraph";
 import { initElement } from "./init";
 
 export class Block {
   constructor({
     paragraph,
     defaultStyle,
+    disabled,
   }: {
     paragraph: Paragraph;
     defaultStyle?: Partial<CSSStyleDeclaration>;
+    disabled?: boolean;
   }) {
-    initElement(this, {defaultStyle, paragraph});
-    eventWrapper(this, this.el);
+    initElement(this, {paragraph, defaultStyle, disabled});
   }
 
-  public on: (eventName: BlockEventName, listener: (e: MouseEvent) => void) => void;
-  public setEditable(editable: boolean) {
-    this.el.contentEditable = editable.toString();
+  public disabled = false;
+  public setDisabled(disabled: boolean) {
+    if (this.disabled === disabled) {
+      return;
+    }
+    this.disabled = disabled;
+    if (disabled) {
+      this.el.style.userSelect = 'none';
+      this.el.contentEditable = 'false';
+    } else {
+      this.el.style.userSelect = 'auto';
+      this.el.contentEditable = 'true';
+    }
   }
 
   public mountTo(root: HTMLElement) {

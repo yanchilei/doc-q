@@ -1,6 +1,6 @@
 import { DocQ, DocQParams } from "..";
 import { Block } from "../../block";
-import { Paragraph } from "../../text-segment";
+import { Paragraph } from "../../paragraph";
 
 export function initModel(
   docQ: DocQ,
@@ -8,9 +8,10 @@ export function initModel(
     data,
     blockDefaultStyle,
   }: DocQParams) {
-  docQ.model = data.map((textSegmentList) => new Block({
+  docQ.model = data.map(({textSegmentList, disabled}) => new Block({
     paragraph: new Paragraph(textSegmentList),
     defaultStyle: blockDefaultStyle,
+    disabled,
   }));
   docQ.model.forEach(block => {
     block.mountTo(docQ.blockContainer);

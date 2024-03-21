@@ -1,8 +1,11 @@
 import { DocQ } from "..";
+import { getSelectedBlocks } from "../../../utils/selection";
 
 export function initSelectionListener(doc: DocQ) {
   document.addEventListener('selectionchange', e => {
     const selection = window.getSelection();
+    const selectedBlocks = getSelectedBlocks(doc, selection)[0];
+    console.log(selectedBlocks);
     if (isInBlockContainer(doc, selection)) {
       doc.selection = selection;
       doc.eventEmitter.emit('selectionchange', doc, selection);

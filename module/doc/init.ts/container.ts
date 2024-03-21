@@ -6,6 +6,7 @@ export function initContainer(docQ: DocQ, {containerDefaultStyle, editable}: {co
   docQ.container.style.padding = '64px';
   docQ.container.style.outline = 'none';
   docQ.container.setAttribute('contenteditable', editable ? 'true' : 'false');
+  docQ.container.classList.add('doc-q-editable');
   if (containerDefaultStyle) {
     Object.keys(containerDefaultStyle).forEach(name => {
       docQ.container.style[name] = containerDefaultStyle[name];

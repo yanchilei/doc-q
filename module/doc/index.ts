@@ -1,12 +1,12 @@
 import { Block } from "../block";
-import { EventName, EventEmitter, EventTypeMap } from "../event-emitter";
-import { TextSegment } from "../text-segment";
+import { EventName, EventEmitter, EventTypeMap } from "../event";
+import { TextSegment } from "../paragraph";
 import { init } from "./init.ts";
 
 export interface DocQParams { 
   title: string,
   editable?: boolean,
-  data: TextSegment[][],
+  data: { textSegmentList: TextSegment[], disabled?: boolean; }[],
   containerDefaultStyle?: Partial<CSSStyleDeclaration>,
   titleDefaultStyle?: Partial<CSSStyleDeclaration>,
   blockContainerDefaultStyle?: Partial<CSSStyleDeclaration>,
