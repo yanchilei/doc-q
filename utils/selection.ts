@@ -3,7 +3,7 @@ import { DocQ } from "../module/doc";
 
 export function getSelectedBlocks(doc: DocQ, selection: Selection) {
   const blocks: Block[] = [doc.title, ...doc.model];
-  const selects: { blocks: Block[], start: number, end: number }[] = [];
+  const selects: { selectedBlocks: Block[], start: number, end: number }[] = [];
   for (let i = 0; i < selection.rangeCount; i++) {
     let startBlock: Block = null;
     let endBlock: Block = null;
@@ -32,7 +32,7 @@ export function getSelectedBlocks(doc: DocQ, selection: Selection) {
       }
     }
     selects.push({
-      blocks: singleSelectedBlocks,
+      selectedBlocks: singleSelectedBlocks,
       start: startOffset,
       end: endOffset,
     });

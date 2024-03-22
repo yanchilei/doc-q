@@ -1,4 +1,8 @@
+import { DocQ } from "../doc";
+import { Context } from "../doc/context";
+import { EventEmitter } from "../event";
 import { Paragraph } from "../paragraph";
+import { initEvent } from "./event";
 import { initElement } from "./init";
 
 export class Block {
@@ -6,12 +10,22 @@ export class Block {
     paragraph,
     defaultStyle,
     disabled,
+    doc,
   }: {
     paragraph: Paragraph;
     defaultStyle?: Partial<CSSStyleDeclaration>;
     disabled?: boolean;
+    doc: DocQ;
   }) {
-    initElement(this, {paragraph, defaultStyle, disabled});
+    initElement(
+      this, {
+        paragraph,
+        defaultStyle,
+        disabled,
+        doc,
+      });
+
+    initEvent(this, doc);
   }
 
   public disabled = false;
@@ -34,7 +48,7 @@ export class Block {
     return this;
   }
 
-  public el: HTMLDivElement | null = null;
+  public el: HTMLDivElement = null;
   public remove() {
     if (this.el) {
       this.el.remove();
@@ -42,4 +56,10 @@ export class Block {
   }
 
   public paragraph: Paragraph;
+
+  public eventEmitter: EventEmitter;
+  public doc: DocQ = null;
+  public onMouseEnter = (cb: (payload: { block: Block, context: Context }) => void) => {
+    this.eventEmitter.on('mouseenterblock', cb);
+  }
 }

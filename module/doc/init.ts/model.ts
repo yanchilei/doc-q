@@ -8,10 +8,11 @@ export function initModel(
     data,
     blockDefaultStyle,
   }: DocQParams) {
-  docQ.model = data.map(({textSegmentList, disabled}) => new Block({
-    paragraph: new Paragraph(textSegmentList),
+  docQ.model = data.map(({p, disabled}) => new Block({
+    paragraph: new Paragraph(p),
     defaultStyle: blockDefaultStyle,
     disabled,
+    doc: docQ,
   }));
   docQ.model.forEach(block => {
     block.mountTo(docQ.blockContainer);

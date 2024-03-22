@@ -1,4 +1,5 @@
 import { Block } from ".";
+import { DocQ } from "../doc";
 import { Paragraph } from "../paragraph";
 
 export function initElement(
@@ -7,10 +8,12 @@ export function initElement(
     defaultStyle,
     paragraph,
     disabled,
+    doc,
   }: {
     defaultStyle: Partial<CSSStyleDeclaration>;
     paragraph: Paragraph;
     disabled?: boolean;
+    doc: DocQ;
   }
 ) {
   block.el = document.createElement('div');
@@ -24,4 +27,6 @@ export function initElement(
       block.el.style[name] = defaultStyle[name];
     });
   }
+
+  block.doc = doc;
 }

@@ -13,6 +13,7 @@ export function initTitle(docQ: DocQ, { title, titleDefaultStyle }: DocQParams) 
       borderBottom: 'solid 1px #e4e4e4',
       ...titleDefaultStyle,
     },
+    doc: docQ,
   });
   docQ.title.mountTo(docQ.container);
   return docQ;

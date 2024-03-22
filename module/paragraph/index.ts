@@ -11,21 +11,21 @@ export interface TextSegment {
 }
 
 export class Paragraph {
-  constructor(list: TextSegment[]) {
-    this.list = list;
+  constructor(p: TextSegment[]) {
+    this.p = p;
   }
-  public list: TextSegment[] = [];
+  public p: TextSegment[] = [];
   public add(textSpan: TextSegment) {
-    this.list.push(textSpan);
+    this.p.push(textSpan);
   }
   public insert(index: number, textSpan: TextSegment) {
-    this.list.splice(index, 0, textSpan);
+    this.p.splice(index, 0, textSpan);
   }
 
   get html() {
     let h = '';
-    for (let i = 0; i < this.list.length; i++) {
-      const span = this.list[i];
+    for (let i = 0; i < this.p.length; i++) {
+      const span = this.p[i];
       h += '<span';
 
       if (span.style) {
