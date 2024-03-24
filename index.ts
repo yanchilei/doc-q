@@ -1,23 +1,35 @@
-import { DocQ } from "./module/doc";
-import { TextSegment } from "./module/paragraph";
+import { Data, DocQ } from "./module/doc";
+import { BasicPluginType } from "./module/plugin";
+import { TextPlugin } from "./module/plugin/text";
 
 import './global.css';
 
-const originalData: {p: TextSegment[], disabled?: boolean}[] = [
-  { p: [{ text: 'This is span 01.' }] },
-  { p: [{ text: 'This is span 02.' }] },
-  { p: [{ text: 'This is span 03.' }] },
+const data: Data = [
+  { content: [{ text: 'This is span 01.' }], type: BasicPluginType.TEXT },
+  { content: [{ text: 'This is span 02.' }], type: BasicPluginType.TEXT, disabled: true },
+  { content: [{ text: 'This is span 03.' }], type: BasicPluginType.TEXT },
 ];
-const docQ = new DocQ({
-  title: 'This is the title!',
+
+// const data = [];
+new DocQ({
+  title: 'This is title',
   editable: true,
-  data: originalData,
-});
-
-docQ.mountTo(document.getElementById('root'));
-(window as any).docQ = docQ;
-
-docQ.on('keydown', ({ context, event }) => {
-  console.log(context, event.key);
-});
+  data,
+})
+  .use(new TextPlugin())
+  // .on('keydown', ({ context, event }) => {
+  //   console.log(context, event.key);
+  // })
+  // .on('mouseover', ({ block, context }) => {
+  //   console.log(block, context);
+  // })
+  // .on('click', ({ block, context }) => {
+  //   console.log(block, context);
+  // })
+  .mountTo(
+    document.getElementById('root'),
+    doc => {
+      (window as any).docQ = doc;
+    }
+  );
 

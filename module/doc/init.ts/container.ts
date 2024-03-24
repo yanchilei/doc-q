@@ -1,7 +1,6 @@
 import { DocQ } from "..";
 
 export function initContainer(docQ: DocQ, {containerDefaultStyle, editable}: {containerDefaultStyle?: Partial<CSSStyleDeclaration>; editable?: boolean}) {
-  docQ.container = document.createElement('div');
   docQ.container.style.position = 'relative';
   docQ.container.style.padding = '64px';
   docQ.container.style.outline = 'none';

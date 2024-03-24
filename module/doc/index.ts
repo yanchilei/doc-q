@@ -1,47 +1,74 @@
-import { Block } from "../block";
-import { EventName, EventEmitter, EventParameterMap } from "../event";
-import { TextSegment } from "../paragraph";
+import { BasicData, Block } from "../block";
+import { EventEmitter } from "../event";
+import { BasicPlugin } from "../plugin";
 import { Context } from "./context";
 import { init } from "./init.ts";
 
+export type Data = BasicData[];
+
 export interface DocQParams { 
-  title: string,
+  title?: string,
   editable?: boolean,
-  data: { p: TextSegment[], disabled?: boolean; }[],
+  data?: Data,
   containerDefaultStyle?: Partial<CSSStyleDeclaration>,
   titleDefaultStyle?: Partial<CSSStyleDeclaration>,
   blockContainerDefaultStyle?: Partial<CSSStyleDeclaration>,
   blockDefaultStyle?: Partial<CSSStyleDeclaration>,
 }
 
+export interface DocEventParameterMap {
+  'click': { block: Block, context: Context };
+  'mouseover': { block: Block, context: Context };
+  'keydown': { context: Context, event: KeyboardEvent };
+  'keyup': { context: Context, event: KeyboardEvent };
+  'editablechange': { editable: boolean, context: Context };
+  'selectionchange': { selection: Selection, context: Context };
+}
+
 
 export class DocQ {
+  public params: DocQParams;
   public editable = false;
   public title: Block;
-  public model: Block[];
-  public root: HTMLElement;
-  public container: HTMLDivElement;
-  public blockContainer: HTMLDivElement;
-  public eventEmitter: EventEmitter;
+  public model: Block[] = [];
+  public root: HTMLElement = null;
+  public container = document.createElement('div');
+  public blockContainer = document.createElement('div');
+  public eventEmitter = new EventEmitter<DocEventParameterMap>();
   public context: Context;
+
   constructor(params: DocQParams) {
-    init(this, params);
+    this.params = params;
   }
   public setEditable(editable: boolean) {
     if (this.editable == editable) {
-      return;
+      return this;
     }
     this.editable = editable;
     this.container.contentEditable = editable.toString();
     this.eventEmitter.emit('editablechange', { editable, context: this.context });
+    return this;
   }
 
-  public mountTo(root: HTMLElement) {
+  public mountTo(root: HTMLElement, callback?: (doc: DocQ) => void) {
+    init(this, this.params);
     this.root = root;
     root.appendChild(this.container);
+    callback?.(this);
   }
 
-  public on<T extends EventName>(eventName: T, callback: (payload: EventParameterMap[T]) => void) {
+  public on<T extends keyof DocEventParameterMap>(eventName: T, callback: (payload: DocEventParameterMap[T]) => void) {
     this.eventEmitter.on(eventName, callback);
+    return this;
+  }
+
+  public plugins: BasicPlugin[] = [];
+  public use(plugin: BasicPlugin) {
+    if (this.plugins.includes(plugin)) {
+      console.warn('plugin already exists: ', plugin.type);
+      return this;
+    }
+    this.plugins.push(plugin);
+    return this;
   }
 }

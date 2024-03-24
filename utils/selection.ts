@@ -1,7 +1,7 @@
 import { Block } from "../module/block";
 import { DocQ } from "../module/doc";
 
-export function getSelectedBlocks(doc: DocQ, selection: Selection) {
+export function getSelectedBlocksPosition(doc: DocQ, selection: Selection) {
   const blocks: Block[] = [doc.title, ...doc.model];
   const selects: { selectedBlocks: Block[], start: number, end: number }[] = [];
   for (let i = 0; i < selection.rangeCount; i++) {

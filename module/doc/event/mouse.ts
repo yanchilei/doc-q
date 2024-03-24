@@ -1,9 +1,19 @@
 import { DocQ } from "..";
+import { Block } from "../../block";
 
 export function initMouseEventListener(doc: DocQ) {
   doc.container.addEventListener('click', e => {
     e.stopPropagation();
-    doc.eventEmitter.emit('click', { doc });
+    const block = doc.model.find(block => block.el.contains(e.target as Node));
+    if (block) {
+      doc.context.currentClickedBlock = block;
+      doc.eventEmitter.emit('click', { block, context: doc.context });
+      doc.model.forEach(block => block.setActive(false));
+      block.setActive(true);
+    } else {
+      doc.context.currentClickedBlock = null;
+      doc.model.forEach(block => block.setActive(false));
+    }
   });
 
   doc.container.addEventListener('dragstart', e => {

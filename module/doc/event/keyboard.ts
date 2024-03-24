@@ -1,13 +1,24 @@
 import { DocQ } from "..";
+import { Block } from "../../block";
 
 export function initKeyboardEventListener(doc: DocQ) {
   doc.container.addEventListener('keydown', e => {
     e.preventDefault();
-    doc.eventEmitter.emit('keydown', { context: doc.context, event: e });
+    const { context } = doc;
+    keydownPluginDispatch(doc, e);
+    doc.eventEmitter.emit('keydown', { context, event: e });
   });
 
   doc.container.addEventListener('keyup', e => {
     e.preventDefault();
-    doc.eventEmitter.emit('keyup', { context: doc.context, event: e });
+    const { context } = doc;
+    doc.eventEmitter.emit('keyup', { context, event: e });
   })
+}
+
+function keydownPluginDispatch( doc: DocQ, e: KeyboardEvent ) {
+  for (let i = 0; i < doc.model.length; i++) {
+    const block = doc.model[i];
+    block.eventEmitter.emit('keydown', { block, event: e });
+  }
 }

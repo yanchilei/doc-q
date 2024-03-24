@@ -1,5 +1,4 @@
 import { DocQ, DocQParams } from "..";
-import { EventEmitter } from "../../event";
 import { initBlockContainer } from "./block-container";
 import { initContainer } from "./container";
 import { initEvent } from "../event";

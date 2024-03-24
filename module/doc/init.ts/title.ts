@@ -1,14 +1,14 @@
 import { DocQ, DocQParams } from "..";
 import { Block } from "../../block";
-import { Paragraph } from "../../paragraph";
+import { BasicPluginType } from "../../plugin";
 
 export function initTitle(docQ: DocQ, { title, titleDefaultStyle }: DocQParams) {
-  const paragraph = new Paragraph([{ text: title }]);
   docQ.title = new Block({
-    paragraph,
+    basicData: { type: BasicPluginType.TEXT, content: [{ text: title || '' }] },
     defaultStyle: {
       padding: '16px 0',
       fontSize: '48px',
+      minHeight: '54px',
       fontWeight: '700',
       borderBottom: 'solid 1px #e4e4e4',
       ...titleDefaultStyle,

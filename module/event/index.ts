@@ -1,38 +1,15 @@
-import { Block } from "../block";
-import { DocQ } from "../doc";
-import { Context } from "../doc/context";
+export class EventEmitter<T> {
 
-export type EventName = keyof EventParameterMap;
+  private listeners: Map<keyof T, ((payload: T[keyof T]) => void)[]> = new Map();
 
-export interface EventParameterMap {
-  // Doc Event
-  'click': { doc: DocQ };
-  'mouseover': { block: Block, context: Context };
-
-  'keydown': { context: Context, event: KeyboardEvent };
-  'keyup': { context: Context, event: KeyboardEvent };
-
-  'editablechange': { editable: boolean, context: Context };
-  'selectionchange': { selection: Selection, context: Context };
-
-
-  // Block Event
-  'mouseenterblock': { block: Block, context: Context };
-  'mouseleaveblock': { block: Block, context: Context };
-}
-
-export class EventEmitter {
-
-  private listeners: Map<EventName, ((payload: EventParameterMap[EventName]) => void)[]> = new Map();
-
-  public on<T extends EventName>(type: T, listener: (payload: EventParameterMap[T]) => void) {
+  public on<K extends keyof T>(type: K, listener: (payload: T[K]) => void) {
     if (!this.listeners.has(type)) {
       this.listeners.set(type, []);
     }
     this.listeners.get(type).push(listener);
   }
 
-  public off<T extends EventName>(type: T, listener: (payload: EventParameterMap[T]) => void) {
+  public off<K extends keyof T>(type: K, listener: (payload: T[K]) => void) {
     if (!this.listeners.has(type)) {
       return;
     }
@@ -42,7 +19,7 @@ export class EventEmitter {
     }
   }
 
-  public emit<T extends EventName>(type: T, payload: EventParameterMap[T]) {
+  public emit<K extends keyof T>(type: K, payload: T[K]) {
     if (!this.listeners.has(type)) {
       return;
     }
