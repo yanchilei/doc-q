@@ -6,6 +6,7 @@ import { getHTMLFromTextSegments } from "./render";
 
 export class TextPlugin extends BasicPlugin {
   public type = BasicPluginType.TEXT;
+  public category = 'basic';
 
   public render = (textSegments: TextSegment[]) => {
     return getHTMLFromTextSegments(textSegments);

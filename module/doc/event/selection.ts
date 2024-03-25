@@ -21,10 +21,10 @@ function isInBlockContainer(doc: DocQ, selection: Selection) {
   let focusInBlock = false;
   for (let i = 0; i < doc.model.length; i++) {
     const block = doc.model[i];
-    if (block.el.contains(anchorNode)) {
+    if (block.contentContainer.contains(anchorNode)) {
       anchorInBlock = true;
     }
-    if (block.el.contains(focusNode)) {
+    if (block.contentContainer.contains(focusNode)) {
       focusInBlock = true;
     }
   }

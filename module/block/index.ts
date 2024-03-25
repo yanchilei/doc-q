@@ -3,8 +3,8 @@ import { DocQ } from "../doc";
 import { EventEmitter } from "../event";
 import { TextSegment } from "../paragraph";
 import { BasicPluginType, BasicPlugin } from "../plugin";
-import { initEvent } from "./event";
-import { initElement, initPlugin } from "./init";
+import { initDocEvent, initEvent } from "./event";
+import { initCapitalMenu, initContainer, initContent, initPlugin } from "./init";
 
 export interface BasicData {
   type: string;
@@ -12,10 +12,15 @@ export interface BasicData {
   content: (TextSegment)[];
 }
 
+export enum BlockAbility {
+  CapitalMenu = 'CapitalMenu',
+}
+
 export interface BlockParams {
   basicData: BasicData;
   defaultStyle?: Partial<CSSStyleDeclaration>;
   doc: DocQ;
+  enable?: BlockAbility[];
 }
 
 export interface BlockEventParameterMap {
@@ -31,6 +36,7 @@ export class Block {
     basicData,
     defaultStyle,
     doc,
+    enable = [],
   }: BlockParams) {
     const { type, disabled, content } = basicData;
     const plugin = doc.plugins.find(plugin => plugin.type === type);
@@ -38,17 +44,22 @@ export class Block {
       throw new Error(`can not find plugin: ${type}`);
     }
     this.disabled = false;
+    this.enable = enable;
     this.content = content;
     this.doc = doc;
     this.defaultStyle = defaultStyle;
     this.type = type;
     initPlugin(this, plugin);
-    initElement(this, { disabled });
+
+    initContainer(this);
+    enable.includes(BlockAbility.CapitalMenu) && initCapitalMenu(this);
+    initContent(this, { disabled });
 
     initEvent(this, doc);
   }
 
   public disabled = false;
+  public enable: BlockAbility[] = [];
   public plugin: BasicPlugin = null;
   public setDisabled(disabled: boolean) {
     if (this.disabled === disabled) {
@@ -56,25 +67,23 @@ export class Block {
     }
     this.disabled = disabled;
     if (disabled) {
-      this.el.style.userSelect = 'none';
-      this.el.contentEditable = 'false';
+      this.contentContainer.style.userSelect = 'none';
+      this.contentContainer.contentEditable = 'false';
     } else {
-      this.el.style.userSelect = 'auto';
-      this.el.contentEditable = 'true';
+      this.contentContainer.style.userSelect = 'auto';
+      this.contentContainer.contentEditable = 'true';
     }
   }
 
   public mountTo(root: HTMLElement) {
-    root.appendChild(this.el);
+    root.appendChild(this.container);
     return this;
   }
 
-  public el = document.createElement('div');
-  public remove() {
-    if (this.el) {
-      this.el.remove();
-    }
-  }
+
+  public container = document.createElement('div');
+  public contentContainer = document.createElement('div');
+  public capitalMenuContainer: HTMLDivElement = null;
 
   public content: BasicData['content'];
   public defaultStyle: Partial<CSSStyleDeclaration>;

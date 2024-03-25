@@ -9,6 +9,7 @@ export enum BasicPluginType {
 export abstract class BasicPlugin {
 
   public type: string;
+  public category: string;
 
   public render: (basicData: (TextSegment[])) => string;
   public modify: (block: Block, operator: string) => void;

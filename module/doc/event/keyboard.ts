@@ -1,11 +1,13 @@
 import { DocQ } from "..";
-import { Block } from "../../block";
 
 export function initKeyboardEventListener(doc: DocQ) {
   doc.container.addEventListener('keydown', e => {
     e.preventDefault();
     const { context } = doc;
     keydownPluginDispatch(doc, e);
+    if (e.key === '/') {
+      doc.pluginMenu.show();
+    }
     doc.eventEmitter.emit('keydown', { context, event: e });
   });
 

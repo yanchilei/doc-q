@@ -12,10 +12,10 @@ export function getSelectedBlocksPosition(doc: DocQ, selection: Selection) {
     const { startContainer, startOffset, endContainer, endOffset } = range;
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i];
-      if (block.el.contains(startContainer)) {
+      if (block.contentContainer.contains(startContainer)) {
         startBlock = block;
       }
-      if (block.el.contains(endContainer)) {
+      if (block.contentContainer.contains(endContainer)) {
         endBlock = block;
       }
       if (startBlock && endBlock) {

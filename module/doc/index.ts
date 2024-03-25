@@ -1,5 +1,6 @@
 import { BasicData, Block } from "../block";
 import { EventEmitter } from "../event";
+import { PluginMenu } from "../menu";
 import { BasicPlugin } from "../plugin";
 import { Context } from "./context";
 import { init } from "./init.ts";
@@ -23,6 +24,8 @@ export interface DocEventParameterMap {
   'keyup': { context: Context, event: KeyboardEvent };
   'editablechange': { editable: boolean, context: Context };
   'selectionchange': { selection: Selection, context: Context };
+  'pluginMenuShow': { pluginMenu: PluginMenu, context: Context };
+  'pluginMenuHide': { pluginMenu: PluginMenu, context: Context };
 }
 
 
@@ -36,6 +39,7 @@ export class DocQ {
   public blockContainer = document.createElement('div');
   public eventEmitter = new EventEmitter<DocEventParameterMap>();
   public context: Context;
+  public pluginMenu: PluginMenu;
 
   constructor(params: DocQParams) {
     this.params = params;
